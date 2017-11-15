@@ -6,79 +6,59 @@ import java.util.*;
  * Created by 2YSP on 2017/11/15.
  */
 public class Util {
+    private static String key = "";
+
     public static Map<String, List<Map<String, Object>>> transfer(List<Map<String, Object>> list) {
         Map<String, List<Map<String, Object>>> resultMap = new HashMap<>();
-        List<Map<String, Object>> aList = new ArrayList<>();
-        List<Map<String, Object>> bList = new ArrayList<>();
-        List<Map<String, Object>> cList = new ArrayList<>();
-        //取出所有的值
+        //找出所有类型的key
+        Set<String> keySet = new HashSet<>();
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> m = list.get(i);
             Iterator<Map.Entry<String, Object>> iterator = m.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map<String, Object> map = new HashMap<>();
                 Map.Entry<String, Object> entry = iterator.next();
-                map.put(entry.getKey(), entry.getValue());
-                //分组
-                if ("a".equals(entry.getKey())) {
-                    aList.add(map);
-                } else if ("b".equals(entry.getKey())) {
-                    bList.add(map);
-                } else if ("c".equals(entry.getKey())) {
-                    cList.add(map);
-                }
+                keySet.add(entry.getKey());
             }
         }
-        //再排序
-       Collections.sort(aList, new Comparator<Map<String, Object>>() {
-           @Override
-           public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-               Integer a1 = Integer.valueOf(o1.get("a") + "");
-               Integer a2 = Integer.valueOf(o2.get("a") + "");
 
-               if (a1 > a2){
-                   return 1;
-               }else if (a1 < a2){
-                   return -1;
-               }
-               return 0;
-           }
-       });
-        Collections.sort(bList, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                Integer b1 = Integer.valueOf(o1.get("b") + "");
-                Integer b2 = Integer.valueOf(o2.get("b") + "");
+        Iterator<String> it = keySet.iterator();
+        while (it.hasNext()){
+            key = it.next();
 
-                if (b1 > b2){
-                    return 1;
-                }else if (b1 < b2){
-                    return -1;
+            List<Map<String, Object>> aList = new ArrayList<>();
+            //取出所有的值
+            for (int i = 0; i < list.size(); i++) {
+                Map<String, Object> m = list.get(i);
+                Iterator<Map.Entry<String, Object>> iterator = m.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map<String, Object> map = new HashMap<>();
+                    Map.Entry<String, Object> entry = iterator.next();
+                    map.put(entry.getKey(), entry.getValue());
+                    //分组
+                    if (key.equals(entry.getKey())) {
+                        aList.add(map);
+                    }
                 }
-                return 0;
-            }
-        });
-        Collections.sort(cList, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                Integer c1 = Integer.valueOf(o1.get("c") + "");
-                Integer c2 = Integer.valueOf(o2.get("c") + "");
 
-                if (c1 > c2){
-                    return 1;
-                }else if (c1 < c2){
-                    return -1;
-                }
-                return 0;
-            }
-        });
-//        System.out.println(aList);
-//        System.out.println(bList);
-//        System.out.println(cList);
+                //再排序
+                Collections.sort(aList, new Comparator<Map<String, Object>>() {
+                    @Override
+                    public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                        Integer a1 = Integer.valueOf(o1.get(key) + "");
+                        Integer a2 = Integer.valueOf(o2.get(key) + "");
 
-        resultMap.put("a",aList);
-        resultMap.put("b",bList);
-        resultMap.put("c",cList);
+                        if (a1 > a2){
+                            return -1;
+                        }else if (a1 < a2){
+                            return 1;
+                        }
+                        return 0;
+                    }
+                });
+            }
+            resultMap.put(key,aList);
+        }
+
         return resultMap;
     }
 
