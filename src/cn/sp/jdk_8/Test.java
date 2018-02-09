@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @Author: 2YSP
@@ -14,7 +15,7 @@ public class Test {
 
     public static void main(String[] args) {
         List<Apple> inventory = Arrays.asList(new Apple("green",80),
-                new Apple("green",155),new Apple("red",120));
+                new Apple("red",155),new Apple("red",120),new Apple("green",120));
         //选出绿色的苹果
         List<Apple> greenApples = filter(inventory, (Apple a) -> "green".equals(a.getColor()));
         System.out.println(greenApples);
@@ -29,8 +30,18 @@ public class Test {
 //            }
 //        });
 //        inventory.sort((Apple a1,Apple a2)-> a1.getWeight().compareTo(a2.getWeight()));
-        inventory.sort(Comparator.comparing(Apple::getWeight));
-        System.out.println("=============");
+//        inventory.sort(Comparator.comparing(Apple::getWeight));
+        /**先按重量降序，再颜色排序**/
+        inventory.sort(Comparator
+                        .comparing(Apple::getWeight)
+                        .reversed()
+                        .thenComparing(Apple::getColor));
+        /**复合函数，输出4**/
+        Function<Integer,Integer> f = x -> x+1;
+        Function<Integer,Integer> g = x -> x*2;
+        Function<Integer,Integer> h = f.andThen(g);
+        Integer result = h.apply(1);
+        System.out.println(result);
     }
 
 
