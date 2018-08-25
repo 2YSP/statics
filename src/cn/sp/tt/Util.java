@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class Util {
     private static String key = "";
-
+        //测试Jenkins
     public static Map<String, List<Map<String, Object>>> transfer(List<Map<String, Object>> list) {
         Map<String, List<Map<String, Object>>> resultMap = new HashMap<>();
         //找出所有类型的key
